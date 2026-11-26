@@ -190,7 +190,7 @@ async fn migration_6_loescht_entfernte_einstellungen() {
 }
 
 #[wasm_bindgen_test]
-async fn alte_tab_liste_wird_zum_layout_mit_einem_bereich() {
+async fn alte_tab_liste_wird_zu_seiten_mit_je_einem_tab() {
     let name = unique_name("layout");
     let tab = |id: &str| json!({ "id": id, "kind": "channel", "platform": "twitch", "channel": id, "nickname": null });
     let v4 = open(&name, 4).await.unwrap();
@@ -199,9 +199,13 @@ async fn alte_tab_liste_wird_zum_layout_mit_einem_bereich() {
 
     let conn = open(&name, builtin_count()).await.unwrap();
     let layout = conn.read_json(WORKSPACE, multiyap_core::persistence::LAYOUT_KEY).await.unwrap().expect("Layout fehlt");
-    assert_eq!(layout["root"]["type"], json!("area"));
-    assert_eq!(layout["root"]["tabIds"], json!(["a", "b"]));
-    assert_eq!(layout["root"]["activeTabId"], json!("b"));
+    // Erst ein Bereich mit beiden Tabs, danach (Seiten-Leiste) je Tab eine eigene Seite.
+    let pages = layout["pages"].as_array().expect("Seiten fehlen");
+    assert_eq!(pages.len(), 2);
+    assert_eq!(pages[0]["root"]["tabIds"], json!(["a"]));
+    assert_eq!(pages[1]["root"]["tabIds"], json!(["b"]));
+    assert_eq!(layout["activePageId"], json!("page-b"));
+    assert_eq!(layout["focusedAreaId"], json!("area-b"));
     conn.close();
 }
 

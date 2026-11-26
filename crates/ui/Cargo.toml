@@ -1,0 +1,24 @@
+[package]
+name = "multiyap-ui"
+description = "Oberfläche von MultiYap in Leptos, shadcn/ui 1:1 nachgebaut"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "multiyap_ui"
+path = "src/lib.rs"
+
+[dependencies]
+multiyap-core = { path = "../core" }
+multiyap-web = { path = "../web" }
+leptos = { version = "0.8", features = ["csr"] }
+wasm-bindgen = "=0.2.130"
+js-sys = "0.3"
+wasm-bindgen-futures = "0.4"
+web-sys = { version = "0.3", features = ["CanvasRenderingContext2d", "Clipboard", "Crypto", "Navigator", "CssStyleDeclaration", "File", "FileList", "HtmlCanvasElement", "HtmlDialogElement", "HtmlInputElement", "ImageData", "PointerEvent", "Document", "DomRect", "Element", "EventTarget", "HtmlElement", "KeyboardEvent", "MouseEvent", "Node", "NodeList", "ResizeObserver", "DragEvent", "DataTransfer", "ScrollIntoViewOptions", "ScrollLogicalPosition", "HtmlInputElement", "SubmitEvent", "ResizeObserverEntry", "Selection", "MutationObserver", "MutationObserverInit", "Window"] }
+serde = "1"
+serde_json = "1"
+serde-wasm-bindgen = "0.6"
+send_wrapper = "0.6"

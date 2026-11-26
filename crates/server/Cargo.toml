@@ -1,0 +1,21 @@
+[package]
+name = "multiyap-server"
+description = "Lokaler Webserver für MultiYap: liefert den Build aus und setzt die Sicherheits-Header"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "multiyap_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "multiyap-server"
+path = "src/main.rs"
+
+[dependencies]
+tiny_http = "0.12"
+multiyap-core = { path = "../core" }
+# Sprache des Systems für Meldungen des Programms, bevor die Seite ihre Sprache meldet
+sys-locale = "0.3"

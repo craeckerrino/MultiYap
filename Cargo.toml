@@ -1,0 +1,25 @@
+# Rust-Arbeitsbereich für MultiYap.
+# crates/server: lokaler Webserver (Browser-Version und Programm), src-tauri: Desktop-Programm.
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/server", "crates/ui", "crates/wasm", "crates/web", "src-tauri"]
+
+[workspace.package]
+version = "1.2.0"
+edition = "2021"
+license = "GPL-3.0-only"
+publish = false
+
+[profile.release]
+# Kleines, schnelles Programm.
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+# WebAssembly für die Oberfläche (crates/wasm): wie release, aber ohne strip, weil wasm-bindgen die Angaben braucht
+# und sie selbst entfernt.
+[profile.wasm]
+inherits = "release"
+strip = false

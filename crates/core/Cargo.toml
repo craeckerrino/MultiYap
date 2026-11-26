@@ -1,0 +1,23 @@
+[package]
+name = "multiyap-core"
+description = "Fachlogik von MultiYap ohne Oberfläche"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "multiyap_core"
+path = "src/lib.rs"
+
+[dependencies]
+# Nur die Unicode-Teile, die gebraucht werden (Buchstaben, Ziffern, Leerraum, Groß- und Kleinschreibung): kleiner im Browser.
+regex = { version = "1", default-features = false, features = ["std", "perf", "unicode-case", "unicode-gencat", "unicode-perl"] }
+url = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+
+
+[dev-dependencies]
+futures = "0.3"

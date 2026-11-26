@@ -1,0 +1,29 @@
+# Abhängigkeiten und Build
+node_modules/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Lokale Umgebung und Zugangsdaten
+.env
+.env.*
+!.env.example
+
+# Editor und System
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Desktop-App (electron-builder)
+release/
+
+# Rust (Cargo und Tauri)
+/target/
+/src-tauri/gen/
+
+# WebAssembly aus crates/wasm (wird von npm run build:wasm erzeugt)
+/src/wasm/pkg/

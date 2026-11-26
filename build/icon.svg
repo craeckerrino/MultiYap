@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
+  <!-- Symbol von MultiYap: Sechseck-Sprechblase wie das alte Logo, mit drei
+       Punkten und grünem Verlauf um das App-Grün (Variable brand). Hintergrund transparent.
+       Das Band ist eine Fläche mit Kontur in derselben Farbe, die Kontur rundet die Ecken ab.
+       Quelle für alle Symbole: npx tauri icon build/icon.svg. -->
+  <defs>
+    <linearGradient id="green" gradientUnits="userSpaceOnUse" x1="110" y1="69" x2="400" y2="469">
+      <stop offset="0" stop-color="#4ade80"/>
+      <stop offset="0.5" stop-color="#16a34a"/>
+      <stop offset="1" stop-color="#166534"/>
+    </linearGradient>
+  </defs>
+  <polygon points="206,445 206,372.6 110.1,317.2 110.1,148.8 256,64.5 401.9,148.8 401.9,317.2 294,379.5 294,342.6 369.9,298.8 369.9,167.2 256,101.5 142.1,167.2 142.1,298.8 238,354.1 238,445" fill="url(#green)" stroke="url(#green)" stroke-width="32" stroke-linejoin="round"/>
+  <circle cx="206" cy="233" r="18" fill="url(#green)"/>
+  <circle cx="256" cy="233" r="18" fill="url(#green)"/>
+  <circle cx="306" cy="233" r="18" fill="url(#green)"/>
+</svg>

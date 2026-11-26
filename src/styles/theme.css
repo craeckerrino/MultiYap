@@ -1,0 +1,263 @@
+/*
+  Designsystem von MultiYap.
+
+  Regeln:
+  - Komponenten nutzen nur diese Variablen (über Tailwind-Klassen wie bg-primary, text-live).
+  - Abstände nur aus der Tailwind-Skala, Rundungen nur aus --radius.
+  - Standard ist dunkel (Klasse "dark" am html-Element). Hell ist eine Option.
+  - Akzentfarbe: --brand und --brand-foreground. Standard Grün. Weitere Akzente
+    kommen als [data-accent="..."] dazu, sobald die Auswahl feststeht.
+*/
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+
+  /* shadcn/ui */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Semantische Farben: fest */
+  --color-automod-approve: var(--automod-approve);
+  --color-automod-deny: var(--automod-deny);
+  --color-chat-event: var(--chat-event);
+  --color-chat-event-foreground: var(--chat-event-foreground);
+
+  /* Semantische Farben: Standardwerte, unter Darstellung > Farben anpassbar (src/features/display/colors.ts) */
+  --color-live: var(--live);
+  --color-mention: var(--mention);
+  --color-mention-blink: var(--mention-blink);
+  --color-first-message: var(--first-message);
+  --color-mod-action: var(--mod-action);
+  --color-restricted: var(--restricted);
+  --color-monitored: var(--monitored);
+  --color-spam: var(--spam);
+  --color-link: var(--link);
+  --color-live-marker: var(--live-marker);
+  --color-row-alt: var(--row-alt);
+
+  /* Standardfarben für Begriffs-Kategorien */
+  --color-term-1: var(--term-1);
+  --color-term-2: var(--term-2);
+  --color-term-3: var(--term-3);
+  --color-term-4: var(--term-4);
+  --color-term-5: var(--term-5);
+  --color-term-6: var(--term-6);
+
+  /* Rundungen, abgeleitet aus --radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Chat-Schrift: skaliert nur den Chat-Inhalt (einstellbar ab Stufe 2) */
+  --text-chat: var(--chat-font-size);
+}
+
+/* Hell (Option) */
+:root {
+  --radius: 0.625rem;
+  --chat-font-size: 0.875rem;
+
+  --brand: oklch(0.627 0.194 149.214);
+  --brand-foreground: oklch(0.985 0 0);
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: var(--brand);
+  --chart-1: oklch(0.871 0.15 154.449);
+  --chart-2: oklch(0.723 0.219 149.579);
+  --chart-3: oklch(0.627 0.194 149.214);
+  --chart-4: oklch(0.527 0.154 150.069);
+  --chart-5: oklch(0.448 0.119 151.328);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--brand-foreground);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: var(--brand);
+
+  --automod-approve: oklch(0.627 0.194 149.214);
+  --automod-deny: oklch(0.577 0.245 27.325);
+  --chat-event: oklch(0.948 0.028 342.258);
+  --chat-event-foreground: oklch(0.459 0.187 3.815);
+
+  --live: oklch(0.577 0.245 27.325);
+  --mention: oklch(0.666 0.179 58.318);
+  --mention-blink: var(--mention);
+  --first-message: oklch(0.588 0.158 241.966);
+  --mod-action: oklch(0.556 0 0);
+  /* Eingeschränkte und überwachte Nutzer. */
+  --restricted: oklch(0.577 0.245 27.325);
+  --monitored: oklch(0.558 0.288 302.321);
+  --spam: oklch(0.577 0.245 27.325);
+  --link: oklch(0.546 0.245 262.881);
+  --live-marker: var(--brand);
+  --row-alt: oklch(0.97 0 0);
+
+  --term-1: oklch(0.577 0.245 27.325);
+  --term-2: oklch(0.646 0.222 41.116);
+  --term-3: oklch(0.681 0.162 75.834);
+  --term-4: oklch(0.627 0.194 149.214);
+  --term-5: oklch(0.546 0.245 262.881);
+  --term-6: oklch(0.558 0.288 302.321);
+}
+
+/* Dunkel (Standard) */
+.dark {
+  --brand: oklch(0.723 0.219 149.579);
+  --brand-foreground: oklch(0.205 0 0);
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+
+  --automod-approve: oklch(0.723 0.219 149.579);
+  --automod-deny: oklch(0.637 0.237 25.331);
+  --chat-event: oklch(0.823 0.12 346.018 / 12%);
+  --chat-event-foreground: oklch(0.899 0.061 343.231);
+
+  --live: oklch(0.637 0.237 25.331);
+  --mention: oklch(0.828 0.189 84.429);
+  --mention-blink: var(--mention);
+  --first-message: oklch(0.746 0.16 232.661);
+  --mod-action: oklch(0.708 0 0);
+  --restricted: oklch(0.704 0.191 22.216);
+  --monitored: oklch(0.714 0.203 305.504);
+  --spam: oklch(0.637 0.237 25.331);
+  --link: oklch(0.707 0.165 254.624);
+  --row-alt: color-mix(in oklab, var(--muted) 50%, transparent);
+
+  --term-1: oklch(0.704 0.191 22.216);
+  --term-2: oklch(0.75 0.183 55.934);
+  --term-3: oklch(0.852 0.199 91.936);
+  --term-4: oklch(0.792 0.209 151.711);
+  --term-5: oklch(0.707 0.165 254.624);
+  --term-6: oklch(0.714 0.203 305.504);
+}
+
+/* Native Scroll-Leiste ausblenden, wo eine eigene Leiste gezeichnet wird (Chat). */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+ * Darstellung des Chats, gesteuert über Attribute am html-Element
+ * (src/features/display/apply.ts). Werte nur aus der Tailwind-Skala und den Farb-Tokens.
+ */
+/* Zeilenabstand: normal (Standard) oder kompakt. */
+@utility chat-line {
+  padding-block: calc(var(--spacing) * 0.5);
+  line-height: var(--leading-relaxed);
+  :root[data-chat-density='compact'] & {
+    padding-block: 0;
+    line-height: var(--leading-snug);
+  }
+}
+
+/* Trennstriche und abwechselnde Hintergründe an den Zeilen der Chat-Liste. In der Basis-Schicht, damit
+   Hervorhebungen beim Überfahren und nach einem Sprung (Utility-Klassen) weiterhin Vorrang haben. */
+@layer base {
+  /* Heller als die normale Rahmenfarbe, damit die Striche gut sichtbar sind. */
+  :root[data-chat-separators='1'] [data-chat-row] {
+    border-bottom: 1px solid color-mix(in oklab, var(--muted-foreground) 45%, transparent);
+  }
+  /* „Dick“: 3 Pixel (gespeichert bleibt der Wert 2). */
+  :root[data-chat-separators='2'] [data-chat-row] {
+    border-bottom: 3px solid color-mix(in oklab, var(--muted-foreground) 45%, transparent);
+  }
+  :root[data-chat-zebra] [data-chat-row][data-odd] {
+    background-color: var(--row-alt);
+  }
+  /* Schriftart nur für die Chat-Zeilen (Darstellung, Schriftart). */
+  [data-chat-row] {
+    font-family: var(--chat-font-family, var(--font-sans));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

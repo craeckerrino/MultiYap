@@ -39,11 +39,12 @@ jobs:
 
       - run: npm ci
 
-      - name: Tests
-        run: npm test
-
+      # Zuerst bauen: Die Tests des Desktop-Programms brauchen den fertigen Ordner dist.
       - name: Installer bauen
         run: npm run app:dist
+
+      - name: Tests
+        run: npm test
 
       - uses: actions/upload-artifact@v7
         with:

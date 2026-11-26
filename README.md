@@ -34,12 +34,13 @@ Der Installer liegt danach unter `target/release/bundle/nsis`. Tests: `npm test`
 
 ## Code signing policy
 
-Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+The installer is currently **not signed**. Free code signing through [SignPath Foundation](https://signpath.org) is planned but not yet in place.
+
+Once signing is set up, these rules apply:
 
 - Committers and reviewers: [craeckerrino](https://github.com/craeckerrino)
 - Approvers: [craeckerrino](https://github.com/craeckerrino)
-
-Only the installer built by [GitHub Actions](.github/workflows/build.yml) from this repository is signed. Every release is approved by hand before signing.
+- Only the installer built by [GitHub Actions](.github/workflows/build.yml) from this repository will be signed. Every release will be approved by hand before signing.
 
 ### Privacy
 

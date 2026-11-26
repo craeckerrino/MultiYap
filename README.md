@@ -6,6 +6,12 @@ Download und Infos: [multiyap.app](https://multiyap.app)
 
 *A Twitch and YouTube chat app for Windows: many channels in one window, the stream as its own tab and moderation tools for channels you moderate. Download at [multiyap.app](https://multiyap.app).*
 
+## Unterstützen
+
+Wenn dir MultiYap gefällt, kannst du mich gerne auf [Ko-fi](https://ko-fi.com/multiyap) unterstützen. Das hilft, MultiYap frei von Werbung zu halten und das Projekt weiterzuführen.
+
+*If you like MultiYap, feel free to support me on [Ko-fi](https://ko-fi.com/multiyap). It helps keep MultiYap free of ads and keeps the project going.*
+
 ## Technik
 
 Geschrieben in Rust: [Tauri 2](https://tauri.app) für das Programmfenster, [Leptos](https://leptos.dev) (WebAssembly) für die Oberfläche. Die App nutzt das in Windows eingebaute WebView2.

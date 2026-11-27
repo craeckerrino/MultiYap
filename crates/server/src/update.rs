@@ -1,4 +1,4 @@
-//! Updates aus einem lokalen Ordner. Updates von der Website kommen dazu (crates/core/src/updates.rs, src-tauri/src/web_update.rs). Der Ordner enthält je
+//! Updates aus einem lokalen Ordner. Der Ordner enthält je
 //! freigegebener Version `vX.Y.Z\MultiYap-Setup-X.Y.Z.exe` (Ablauf „übertragen“). Die Seite fragt `/api/update?folder=…&lang=…` ab; installiert wird im
 //! Programmfenster (src-tauri/src/main.rs), das dieselben Prüfungen nutzt.
 

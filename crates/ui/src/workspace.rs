@@ -229,28 +229,6 @@ fn choice_button(choice: Choice, selected: Signal<bool>, on_pick: impl Fn() + 's
     }
 }
 
-/// Hinweis vor dem Öffnen eines YouTube-Kanals (YouTube API Services Developer Policies, III.A.1 und III.A.2): Mit dem
-/// Öffnen gelten die Nutzungsbedingungen von YouTube, dazu die Datenschutzerklärungen von Google und MultiYap
-/// (Abschnitt 7 auf multiyap.app). Links öffnen im Browser.
-fn youtube_consent() -> impl IntoView {
-    let en = multiyap_core::i18n::is_en();
-    let privacy = format!("{}{}", multiyap_core::youtube::WEBSITE, if en { "/en/privacy/" } else { "/de/datenschutz/" });
-    let link = |href: String, text: &'static str| {
-        view! { <a class="text-primary underline-offset-4 hover:underline" href=href target="_blank" rel="noopener noreferrer">{text}</a> }
-    };
-    view! {
-        <p class="text-xs leading-relaxed text-muted-foreground">
-            {tr("YouTube-Chats sind vorerst nur zum Lesen, ohne Google-Konto. MultiYap nutzt die YouTube API Services. Mit dem Öffnen stimmst du den ", "YouTube chats are read-only for now, no Google account needed. MultiYap uses the YouTube API Services. By opening a channel you agree to the ")}
-            {link("https://www.youtube.com/t/terms".into(), tr("Nutzungsbedingungen von YouTube", "YouTube Terms of Service"))}
-            {tr(" zu. Es gelten die ", ". The ")}
-            {link("http://www.google.com/policies/privacy".into(), tr("Datenschutzerklärung von Google", "Google Privacy Policy"))}
-            {tr(" und die ", " and the ")}
-            {link(privacy, tr("Datenschutzerklärung von MultiYap", "MultiYap privacy policy"))}
-            {tr(" (Abschnitt 7).", " (section 7) apply.")}
-        </p>
-    }
-}
-
 /// „+“-Dialog: Tab-Art wählen, bei „Kanal“ und „Stream“ Plattform und Kanalname, bei „Hervorhebungen“ direkt öffnen.
 #[component]
 fn AddTabDialog() -> impl IntoView {
@@ -403,7 +381,6 @@ fn AddTabDialog() -> impl IntoView {
                                 view! { <p class="text-sm text-muted-foreground">{multiyap_core::tf!("{label} ist noch nicht verfügbar.", "{label} is not available yet.")}</p> }
                             })}
                         </div>
-                        {move || (platform.get() == "youtube" && platform_available()).then(youtube_consent)}
                         <div data-slot="dialog-footer" class=DIALOG_FOOTER>
                             <button type="submit" data-slot="button" class=button_class("default", "default", "")
                                 disabled=move || !platform_available() || input.with(|i| i.trim().is_empty())>

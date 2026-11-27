@@ -143,8 +143,6 @@ fn build() -> Vec<Setting> {
         setting("chat.giftSubLines", boolean(), json!(false)),
         // Ordner mit den freigegebenen Versionen für Updates; leer: keine Prüfung.
         setting("updates.folder", text_len(0, 500), json!("")),
-        // Updates von multiyap.app suchen und laden.
-        setting("updates.fromWebsite", boolean(), json!(true)),
         // Sprache der Oberfläche: „auto“ folgt der Sprache des Systems.
         setting("app.language", one_of_texts(&["auto", "de", "en"]), json!("auto")),
         // ---- Darstellung ----
@@ -360,7 +358,7 @@ mod tests {
 
     #[test]
     fn alle_standardwerte_gueltig_und_schluessel_eindeutig() {
-        assert_eq!(all().len(), 53);
+        assert_eq!(all().len(), 52);
         assert!(unique(all().iter().map(|s| s.key)));
         for setting in all() {
             assert_eq!(setting.schema.parse(&setting.default).as_ref(), Ok(&setting.default), "{}", setting.key);

@@ -1,10 +1,8 @@
 # MultiYap
 
-Chat-App für Twitch und YouTube unter Windows: beliebig viele Kanäle in einem Fenster, Stream-Ansicht als eigener Tab und Moderationswerkzeuge für Kanäle, in denen du Mod oder Broadcaster bist.
+Chat-App für Twitch unter Windows: beliebig viele Kanäle in einem Fenster, Stream-Ansicht als eigener Tab und Moderationswerkzeuge für Kanäle, in denen du Mod oder Broadcaster bist. YouTube-Chats folgen später.
 
-Download und Infos: [multiyap.app](https://multiyap.app)
-
-*A Twitch and YouTube chat app for Windows: many channels in one window, the stream as its own tab and moderation tools for channels you moderate. Download at [multiyap.app](https://multiyap.app).*
+*A Twitch chat app for Windows: many channels in one window, the stream as its own tab and moderation tools for channels you moderate. YouTube chats will follow later.*
 
 ## Unterstützen
 
@@ -50,7 +48,7 @@ Once signing is set up, these rules apply:
 
 ### Privacy
 
-MultiYap only connects to the services it needs for the features you use: Twitch (chat, sign in, moderation), the emote services 7TV, BetterTTV and FrankerFaceZ, recent-messages.robotty.de (recent chat history when a channel is opened) and multiyap.app (YouTube chats and the update check, which can be turned off under Settings → Updates). There is no telemetry, no tracking and no advertising. Details: [privacy policy](https://multiyap.app/en/privacy/) ([Deutsch](https://multiyap.app/de/datenschutz/)).
+MultiYap only connects to the services it needs for the features you use: Twitch (chat, sign in, moderation), the emote services 7TV, BetterTTV and FrankerFaceZ, and recent-messages.robotty.de (recent chat history when a channel is opened). Updates are only looked for in a folder you choose under Settings → Updates. There is no telemetry, no tracking and no advertising. Settings and the layout stay on your computer; chat messages are never saved.
 
 ## Lizenz
 

@@ -53,16 +53,6 @@ pub fn update_request(url: &Url) -> Option<(String, String)> {
     Some((value("folder")?, value("version")?))
 }
 
-/// Update von der Website installieren: MultiYap öffnet `/update-download?version=…` als neues Fenster
-/// (crates/web/src/updates.rs). Gibt die Version zurück; Laden und Prüfen in web_update.rs.
-pub fn download_request(url: &Url) -> Option<String> {
-    if !same_origin(url, &app_origin()) || url.path() != "/update-download" {
-        return None;
-    }
-    let (_, version) = url.query_pairs().find(|(key, _)| key == "version")?;
-    multiyap_core::updates::parse_version(&version).map(|_| version.into_owned())
-}
-
 /// Programmdatei aus dem Öffnen-Befehl eines Browsers, zum Beispiel
 /// `"C:\Program Files\Mozilla Firefox\firefox.exe" -osint -url "%1"`.
 pub fn browser_executable(command: &str) -> Option<String> {
@@ -140,14 +130,6 @@ mod tests {
         assert!(private_target(&url("http://localhost:8475/open-private")).is_none());
         assert!(private_target(&url("http://localhost:9999/open-private?url=https%3A%2F%2Fexample.com")).is_none());
         assert!(private_target(&url("https://example.com/open-private?url=https%3A%2F%2Fexample.com")).is_none());
-    }
-
-    #[test]
-    fn update_von_der_website() {
-        assert_eq!(download_request(&url("http://localhost:8475/update-download?version=0.98.0")).as_deref(), Some("0.98.0"));
-        assert!(download_request(&url("http://localhost:8475/update-download?version=..%2F1")).is_none());
-        assert!(download_request(&url("http://localhost:8475/update-download")).is_none());
-        assert!(download_request(&url("https://example.com/update-download?version=0.98.0")).is_none());
     }
 
     #[test]

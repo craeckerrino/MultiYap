@@ -209,6 +209,9 @@ fn YouTubeView(tab: Signal<TabInfo>) -> impl IntoView {
         JsValue::from(youtube::items_js(&key.get()))
     });
     let notice = move || -> Option<(bool, String)> {
+        if multiyap_core::youtube::SERVER.is_none() {
+            return Some((false, tr("YouTube-Chats sind noch nicht verfügbar (Coming Soon).", "YouTube chats are not available yet (Coming Soon).").to_string()));
+        }
         Some(match status.get()? {
             youtube::Status::Checking | youtube::Status::Live => return None,
             youtube::Status::Offline => (false, tr("Der Kanal ist gerade nicht live. MultiYap prüft alle 2 Minuten, ob er live geht.", "The channel is not live right now. MultiYap checks every 2 minutes whether it goes live.").to_string()),
@@ -230,12 +233,14 @@ fn YouTubeView(tab: Signal<TabInfo>) -> impl IntoView {
                 view! { <p class="border-b px-3 py-2 text-sm text-muted-foreground">{message}</p> }.into_any()
             })}
             <ChatList items=items has_older=false search_tab_id=tab_id pause=pause />
-            // Statt des Eingabefelds: YouTube ist vorerst nur zum Lesen.
-            <div class="flex shrink-0 items-center gap-2 border-t px-3 py-2 text-sm text-muted-foreground">
-                {icons::eye("size-4 shrink-0")}
-                <span class="min-w-0 flex-1">{tr("YouTube ist vorerst nur zum Lesen. Schreiben und Moderieren folgen später.", "YouTube is read-only for now. Writing and moderating will follow later.")}</span>
-                <ComingSoonBadge />
-            </div>
+            // Statt des Eingabefelds: YouTube ist vorerst nur zum Lesen (ohne Server gar nicht, dann reicht der Hinweis oben).
+            {multiyap_core::youtube::SERVER.is_some().then(|| view! {
+                <div class="flex shrink-0 items-center gap-2 border-t px-3 py-2 text-sm text-muted-foreground">
+                    {icons::eye("size-4 shrink-0")}
+                    <span class="min-w-0 flex-1">{tr("YouTube ist vorerst nur zum Lesen. Schreiben und Moderieren folgen später.", "YouTube is read-only for now. Writing and moderating will follow later.")}</span>
+                    <ComingSoonBadge />
+                </div>
+            })}
         </div>
     }
 }

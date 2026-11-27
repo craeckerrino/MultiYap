@@ -18,7 +18,7 @@ pub const SOUNDS: &str = "sounds";
 
 /// Einstellungen, die es nicht mehr gibt. Sie werden per Migration entfernt und in älteren Sicherungen beim
 /// Einspielen übersprungen.
-pub const REMOVED_SETTING_KEYS: [&str; 5] = [
+pub const REMOVED_SETTING_KEYS: [&str; 6] = [
     // Ersetzt durch chat.pauseMaxSeconds (15.11.2026).
     "chat.pauseDelay",
     // Ersetzt durch highlights.scope, ein Schalter im Einstellungsfenster statt pro Tab (15.11.2026).
@@ -29,6 +29,8 @@ pub const REMOVED_SETTING_KEYS: [&str; 5] = [
     "moderation.shortcuts",
     // Ersetzt durch display.inputSize: Eingabefeld immer einzeilig, nur kleiner einstellbar (15.11.2026).
     "display.inputRows",
+    // Updates gibt es nur noch aus dem Versionsordner (27.11.2026).
+    "updates.fromWebsite",
 ];
 
 pub const LEGACY_SHORTCUTS_KEY: &str = "moderation.shortcuts";
@@ -64,7 +66,7 @@ const fn migration(version: u32, description: &'static str, steps: &'static [Ste
     Migration { version, description, steps }
 }
 
-pub const MIGRATIONS: [Migration; 19] = [
+pub const MIGRATIONS: [Migration; 20] = [
     migration(1, "Grundgerüst: Einstellungen als Schlüssel-Wert-Speicher", &[Step::CreateStore(SETTINGS)]),
     migration(2, "Anmeldedaten in eigenem Store (nie Teil der Sicherung)", &[Step::CreateStore(AUTH)]),
     migration(3, "Arbeitsfläche mit Tabs", &[Step::CreateStore(WORKSPACE)]),
@@ -129,6 +131,7 @@ pub const MIGRATIONS: [Migration; 19] = [
         "Arbeitsfläche mit Seiten oben, je Bereich genau ein Inhalt",
         &[Step::Update { store: WORKSPACE, key: LAYOUT_KEY, change: workspace_to_pages }],
     ),
+    migration(20, "Entfernte Einstellungen löschen (Updates nur noch aus dem Versionsordner)", &[Step::DeleteRemovedSettings]),
 ];
 
 /// Aktuelle Schema-Version.
@@ -491,9 +494,9 @@ mod tests {
     #[test]
     fn versionen_lueckenlos() {
         let versions: Vec<u32> = MIGRATIONS.iter().map(|m| m.version).collect();
-        assert_eq!(check_versions(&versions), Ok(19));
+        assert_eq!(check_versions(&versions), Ok(20));
         assert!(check_versions(&[2]).is_err());
-        assert_eq!(SCHEMA_VERSION, 19);
+        assert_eq!(SCHEMA_VERSION, 20);
     }
 
     #[test]

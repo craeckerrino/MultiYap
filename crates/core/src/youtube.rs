@@ -1,6 +1,6 @@
 //! YouTube in der App, zuerst nur lesen. Die App spricht nie selbst mit YouTube: Live-Status und Chat
-//! kommen vom MultiYap-Server (`/api/youtube/live` und `/api/youtube/chat` als Server-Sent Events), der den
-//! API-Schlüssel hält.
+//! kommen von einem MultiYap-Server (`/api/youtube/live` und `/api/youtube/chat` als Server-Sent Events), der den
+//! API-Schlüssel hält. Ohne Server ist YouTube „Coming Soon“ (`SERVER`).
 //!
 //! Hier steht die reine Fachlogik: Kanal aus Name oder Link erkennen, Antworten des Servers lesen, Nachrichten in
 //! das gemeinsame Nachrichtenmodell (`model.rs`) übertragen und entscheiden, wie es nach dem Ende einer Verbindung
@@ -13,12 +13,9 @@ use crate::i18n::tr;
 use crate::links::{split_links, LinkPart};
 use crate::model::{Badge, ChannelRef, ChatEventItem, ChatMessage, MessageFlags, MessagePart, Sender};
 
-/// Adresse des MultiYap-Servers. Für lokale Tests beim Bauen über die Umgebungsvariable `MULTIYAP_WEBSITE`
-/// änderbar (zum Beispiel `http://localhost:8787`), sonst immer multiyap.app.
-pub const WEBSITE: &str = match option_env!("MULTIYAP_WEBSITE") {
-    Some(url) => url,
-    None => "https://multiyap.app",
-};
+/// Adresse des MultiYap-Servers für YouTube, beim Bauen über die Umgebungsvariable `MULTIYAP_YOUTUBE_SERVER`
+/// (zum Beispiel `http://localhost:8787`). Ohne Server ist YouTube „Coming Soon“ und die App verbindet nichts.
+pub const SERVER: Option<&str> = option_env!("MULTIYAP_YOUTUBE_SERVER");
 
 /// Plattform-ID im Nachrichtenmodell und in Tabs.
 pub const PLATFORM: &str = "youtube";
@@ -29,8 +26,8 @@ pub const OFFLINE_CHECK_MS: f64 = 120_000.0;
 // ---------------------------------------------------------------------------------------------------------
 // Kanal erkennen
 
-/// Kanal aus Name, Kanal-ID oder Link: „@name“ (klein geschrieben) oder „UC…“. Gleiche Regeln wie auf dem Server
-/// (`Website/server/src/youtube/live.rs`): Namen 3 bis 30 Zeichen aus Buchstaben, Ziffern, „.“, „_“ und „-“.
+/// Kanal aus Name, Kanal-ID oder Link: „@name“ (klein geschrieben) oder „UC…“. Gleiche Regeln wie auf dem Server:
+/// Namen 3 bis 30 Zeichen aus Buchstaben, Ziffern, „.“, „_“ und „-“.
 pub fn channel_key(input: &str) -> Option<String> {
     let input = input.trim();
     if input.is_empty() || input.len() > 200 {
@@ -115,14 +112,14 @@ fn encode(text: &str) -> String {
     url::form_urlencoded::byte_serialize(text.as_bytes()).collect()
 }
 
-/// Live-Status eines Kanals beim Server.
-pub fn live_url(key: &str) -> String {
-    format!("{WEBSITE}/api/youtube/live?channel={}", encode(key))
+/// Live-Status eines Kanals beim Server (`None` ohne Server).
+pub fn live_url(key: &str) -> Option<String> {
+    SERVER.map(|server| format!("{server}/api/youtube/live?channel={}", encode(key)))
 }
 
-/// Chat eines Kanals beim Server (Server-Sent Events).
-pub fn chat_url(key: &str) -> String {
-    format!("{WEBSITE}/api/youtube/chat?channel={}", encode(key))
+/// Chat eines Kanals beim Server (Server-Sent Events, `None` ohne Server).
+pub fn chat_url(key: &str) -> Option<String> {
+    SERVER.map(|server| format!("{server}/api/youtube/chat?channel={}", encode(key)))
 }
 
 /// Kanal auf YouTube im Browser. Auch die Kanal-ID wird kodiert: Sie kommt bei Nutzerkarten aus dem Chat, also von
@@ -415,8 +412,12 @@ mod tests {
 
     #[test]
     fn adressen() {
-        assert_eq!(live_url("@grünzeug"), format!("{WEBSITE}/api/youtube/live?channel=%40gr%C3%BCnzeug"));
-        assert_eq!(chat_url(ID), format!("{WEBSITE}/api/youtube/chat?channel={ID}"));
+        if let Some(server) = SERVER {
+            assert_eq!(live_url("@grünzeug").unwrap(), format!("{server}/api/youtube/live?channel=%40gr%C3%BCnzeug"));
+            assert_eq!(chat_url(ID).unwrap(), format!("{server}/api/youtube/chat?channel={ID}"));
+        } else {
+            assert!(live_url("@grünzeug").is_none() && chat_url(ID).is_none());
+        }
         assert_eq!(channel_page("@lofigirl"), "https://www.youtube.com/@lofigirl");
         assert_eq!(channel_page(ID), format!("https://www.youtube.com/channel/{ID}"));
         assert_eq!(channel_page("UC/../../watch?v=x#a"), "https://www.youtube.com/channel/UC%2F..%2F..%2Fwatch%3Fv%3Dx%23a");
@@ -433,7 +434,7 @@ mod tests {
 
     #[test]
     fn textnachricht_wie_bei_twitch() {
-        let line = ChatLine { id: "m1".into(), kind: "textMessageEvent".into(), time: Some("2026-11-24T12:00:00.5+00:00".into()), text: "Hallo multiyap.app".into(), author: Some(author()) };
+        let line = ChatLine { id: "m1".into(), kind: "textMessageEvent".into(), time: Some("2026-11-24T12:00:00.5+00:00".into()), text: "Hallo example.com".into(), author: Some(author()) };
         let item = to_item(&line, &channel(), 0.0, false).unwrap();
         let message: ChatMessage = serde_json::from_value(item).unwrap();
         assert_eq!(message.flags.from_history, None);
@@ -444,7 +445,7 @@ mod tests {
         assert_eq!((message.sender.login.as_str(), message.sender.display_name.as_str(), message.sender.id.as_str()), ("jemand", "@Jemand", "UCj"));
         assert_eq!(message.badges.iter().map(|b| b.set_id.as_str()).collect::<Vec<_>>(), ["moderator"]);
         assert!(message.badges[0].image_url.is_none());
-        assert!(matches!(&message.parts[1], MessagePart::Link { text, url } if text == "multiyap.app" && url.contains("multiyap.app")));
+        assert!(matches!(&message.parts[1], MessagePart::Link { text, url } if text == "example.com" && url.contains("example.com")));
     }
 
     #[test]

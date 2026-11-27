@@ -8,7 +8,6 @@
 
 mod private_browser;
 mod rules;
-mod web_update;
 
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -138,10 +137,6 @@ fn main() {
                     }
                     if let Some((folder, version)) = rules::update_request(&url) {
                         install_update(&window_handle, &folder, &version);
-                        return NewWindowResponse::Deny;
-                    }
-                    if let Some(version) = rules::download_request(&url) {
-                        web_update::install(window_handle.clone(), version);
                         return NewWindowResponse::Deny;
                     }
                     if let Some(target) = rules::private_target(&url) {

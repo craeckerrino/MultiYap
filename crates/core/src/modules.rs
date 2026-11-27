@@ -39,6 +39,8 @@ const fn module(id: &'static str, label: &'static str, status: ModuleStatus) -> 
     Module { id, label, status, description: "", capabilities: &[], platforms: &[] }
 }
 
+const YOUTUBE_STATUS: ModuleStatus = if crate::youtube::SERVER.is_some() { ModuleStatus::Available } else { ModuleStatus::ComingSoon };
+
 /// Plattformen. Fähigkeiten nach.
 pub const PLATFORMS: [Module; 2] = [
     Module {
@@ -63,9 +65,9 @@ pub const PLATFORMS: [Module; 2] = [
         ],
         ..module("twitch", "Twitch", ModuleStatus::Available)
     },
-    // YouTube: zuerst nur lesen, über den MultiYap-Server. Schreiben und Moderation später. Verwarnen gibt es nur bei
-    // Twitch.
-    Module { capabilities: &["readChat", "liveStatus"], ..module("youtube", "YouTube", ModuleStatus::Available) },
+    // YouTube: zuerst nur lesen, über einen MultiYap-Server; ohne Server „Coming Soon“. Schreiben und Moderation später.
+    // Verwarnen gibt es nur bei Twitch.
+    Module { capabilities: &["readChat", "liveStatus"], ..module("youtube", "YouTube", YOUTUBE_STATUS) },
 ];
 
 /// Emote-Dienste. Badges nur von 7TV, nicht von BTTV und FFZ.
@@ -130,10 +132,10 @@ mod tests {
     fn faehigkeiten_nur_fuer_verfuegbare_module() {
         let twitch = find(&PLATFORMS, "twitch").unwrap();
         assert!(twitch.supports("warn"));
-        let youtube = find(&PLATFORMS, "youtube").unwrap();
+        let youtube = Module { status: ModuleStatus::Available, ..*find(&PLATFORMS, "youtube").unwrap() };
         assert!(youtube.supports("readChat"));
         assert!(!youtube.supports("writeChat"));
-        assert!(!Module { status: ModuleStatus::ComingSoon, ..*youtube }.supports("readChat"));
+        assert!(!Module { status: ModuleStatus::ComingSoon, ..youtube }.supports("readChat"));
     }
 
     #[test]
@@ -155,7 +157,7 @@ mod tests {
         assert_eq!(ids(&HISTORY_SOURCES), ["recent-messages"]);
         assert_eq!(ids(&EXTERNAL_SOURCES), ["lurkology"]);
         assert_eq!(ids(&tab_kinds()), ["channel", "highlights", "stream", "firehose"]);
-        assert_eq!(find(&PLATFORMS, "youtube").unwrap().status, ModuleStatus::Available);
+        assert_eq!(find(&PLATFORMS, "youtube").unwrap().available(), crate::youtube::SERVER.is_some());
         assert_eq!(platform_label("twitch"), "Twitch");
         assert_eq!(platform_label("unbekannt"), "unbekannt");
     }

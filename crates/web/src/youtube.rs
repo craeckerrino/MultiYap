@@ -1,5 +1,5 @@
 //! YouTube-Kanäle der App, zuerst nur lesen. Für jeden offenen YouTube-Tab (Kanal-Tab mit Plattform „youtube“) fragt
-//! die App den MultiYap-Server nach dem Live-Status und öffnet, solange der Kanal live ist, den Chat als Server-Sent
+//! die App den MultiYap-Server (`multiyap_core::youtube::SERVER`, ohne Server startet nichts) nach dem Live-Status und öffnet, solange der Kanal live ist, den Chat als Server-Sent
 //! Events (`EventSource`). Eine Anmeldung ist nicht nötig; mit YouTube selbst spricht nur der Server.
 //!
 //! Nachrichten leben nur im Arbeitsspeicher (höchstens `chat_buffer::MAX_ITEMS` je Kanal) und haben dieselbe Form
@@ -201,7 +201,10 @@ impl YouTubeChannel {
         let generation = self.next_generation();
         let init = RequestInit::new();
         init.set_credentials(web_sys::RequestCredentials::Omit);
-        let result = net::fetch(&core::live_url(&self.key), &init).await;
+        let Some(url) = core::live_url(&self.key) else {
+            return self.apply("youtube_error");
+        };
+        let result = net::fetch(&url, &init).await;
         if !self.current(generation) {
             return;
         }
@@ -233,7 +236,7 @@ impl YouTubeChannel {
     /// Chat als Server-Sent Events öffnen.
     fn connect(self: &Rc<Self>) {
         self.close_source();
-        let Ok(source) = EventSource::new(&core::chat_url(&self.key)) else {
+        let Some(Ok(source)) = core::chat_url(&self.key).map(|url| EventSource::new(&url)) else {
             return self.apply("youtube_error");
         };
         let weak = Rc::downgrade(self);
@@ -421,7 +424,8 @@ fn channel(key: &str) -> Option<Rc<YouTubeChannel>> {
 
 /// Folgt den offenen Tabs (einmal starten). Ohne Anmeldung, YouTube braucht keine.
 pub fn start() {
-    if REGISTRY.with(|r| std::mem::replace(&mut r.borrow_mut().started, true)) {
+    // Ohne MultiYap-Server ist YouTube „Coming Soon“: keine Verbindungen.
+    if core::SERVER.is_none() || REGISTRY.with(|r| std::mem::replace(&mut r.borrow_mut().started, true)) {
         return;
     }
     workspace::subscribe(Rc::new(sync));

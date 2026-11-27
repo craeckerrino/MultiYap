@@ -138,7 +138,7 @@ pub fn AppHeader() -> impl IntoView {
     }
 }
 
-/// Knopf in der Kopfleiste, wenn auf multiyap.app oder im Versionsordner ein Update bereitliegt. Prüfen in
+/// Knopf in der Kopfleiste, wenn im Versionsordner ein Update bereitliegt. Prüfen in
 /// crates/web/src/updates.rs.
 #[component]
 fn UpdateButton() -> impl IntoView {

@@ -38,7 +38,7 @@ pub const APP_URL: &str = "http://localhost:8475";
 pub const MARKER_HEADER: &str = "X-MultiYap";
 
 /// Content-Security-Policy, unverändert aus server-core.mjs übernommen. Die Adresse des MultiYap-Servers für YouTube
-/// hängt `csp()` an, falls sie nicht multiyap.app ist (lokale Tests).
+/// hängt `csp()` an, falls beim Bauen einer angegeben ist.
 const CSP_BASE: &str = concat!(
     "default-src 'self'; ",
     // WebAssembly (Rust-Fachlogik) braucht 'wasm-unsafe-eval'; normales eval bleibt verboten.
@@ -49,10 +49,8 @@ const CSP_BASE: &str = concat!(
     "font-src 'self'; ",
     "media-src 'self' blob:; ",
     // Twitch: Anmeldung (id), Helix-API (api), EventSub (eventsub.wss), IRC nur lesend (irc-ws); Verlauf:
-    // recent-messages; Emote-Listen von 7TV, BTTV und FFZ; 7TV-Abzeichen und Namensfarben (EventAPI); neueste Version
-    // auf der Website (/download/latest.json, crates/web/src/updates.rs) und YouTube über den MultiYap-Server
-    // (/api/youtube/, crates/web/src/youtube.rs)
-    "connect-src 'self' https://id.twitch.tv https://api.twitch.tv wss://eventsub.wss.twitch.tv wss://irc-ws.chat.twitch.tv https://recent-messages.robotty.de https://7tv.io wss://events.7tv.io https://api.betterttv.net https://api.frankerfacez.com https://multiyap.app; ",
+    // recent-messages; Emote-Listen von 7TV, BTTV und FFZ; 7TV-Abzeichen und Namensfarben (EventAPI)
+    "connect-src 'self' https://id.twitch.tv https://api.twitch.tv wss://eventsub.wss.twitch.tv wss://irc-ws.chat.twitch.tv https://recent-messages.robotty.de https://7tv.io wss://events.7tv.io https://api.betterttv.net https://api.frankerfacez.com; ",
     // Stream-Tab: offizieller Twitch-Player
     "frame-src https://player.twitch.tv; ",
     "object-src 'none'; ",
@@ -61,15 +59,13 @@ const CSP_BASE: &str = concat!(
     "frame-ancestors 'none'",
 );
 
-/// Content-Security-Policy mit der Adresse des MultiYap-Servers (`multiyap_core::youtube::WEBSITE`).
+/// Content-Security-Policy, mit der Adresse des MultiYap-Servers für YouTube (`multiyap_core::youtube::SERVER`),
+/// falls es einen gibt (YouTube über `/api/youtube/`, crates/web/src/youtube.rs).
 pub fn csp() -> &'static str {
     static CSP: std::sync::OnceLock<String> = std::sync::OnceLock::new();
-    CSP.get_or_init(|| {
-        let website = multiyap_core::youtube::WEBSITE;
-        if website == "https://multiyap.app" {
-            return CSP_BASE.to_string();
-        }
-        CSP_BASE.replacen("https://multiyap.app;", &format!("https://multiyap.app {website};"), 1)
+    CSP.get_or_init(|| match multiyap_core::youtube::SERVER {
+        Some(server) => CSP_BASE.replacen("https://api.frankerfacez.com;", &format!("https://api.frankerfacez.com {server};"), 1),
+        None => CSP_BASE.to_string(),
     })
 }
 

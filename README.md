@@ -36,17 +36,7 @@ npm run app:dist
 
 Der Installer liegt danach unter `target/release/bundle/nsis`. Tests: `npm test`.
 
-## Code signing policy
-
-The installer is currently **not signed**. Free code signing through [SignPath Foundation](https://signpath.org) is planned but not yet in place.
-
-Once signing is set up, these rules apply:
-
-- Committers and reviewers: [craeckerrino](https://github.com/craeckerrino)
-- Approvers: [craeckerrino](https://github.com/craeckerrino)
-- Only the installer built by [GitHub Actions](.github/workflows/build.yml) from this repository will be signed. Every release will be approved by hand before signing.
-
-### Privacy
+## Privacy
 
 MultiYap only connects to the services it needs for the features you use: Twitch (chat, sign in, moderation), the emote services 7TV, BetterTTV and FrankerFaceZ, and recent-messages.robotty.de (recent chat history when a channel is opened). Updates are only looked for in a folder you choose under Settings → Updates. There is no telemetry, no tracking and no advertising. Settings and the layout stay on your computer; chat messages are never saved.
 
